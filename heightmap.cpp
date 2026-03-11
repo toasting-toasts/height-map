@@ -66,8 +66,8 @@ private:
              smoothed[i*size+j]+=(1<<(depth-abs(k)))*influence*content[idx*size+j];
         }
 
+        std::swap(smoothed, content);
         std::fill(smoothed.begin(), smoothed.end(), 0);
-        content = smoothed;
         
         for (int i = 0; i<size; i++)
         for (int j = 0; j<size; j++)
@@ -76,7 +76,7 @@ private:
              smoothed[i*size+j]+=(1<<(depth-abs(k)))*influence*content[i*size+idx];
         }
         
-        content = smoothed;
+        std::swap(smoothed, content);
     }
 
     void scale(float factor){

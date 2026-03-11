@@ -56,12 +56,12 @@ private:
 
 
     void smooth_interpolation(int depth){
-        float influence = 1.0f/(3*(1<<(depth-1))-2);
+        float influence = 1.0f/(3*(1<<depth)-2);
         std::vector<float> smoothed(size*size);
         
         for (int i = 0; i<size; i++)
         for (int j = 0; j<size; j++)
-        for (int k=-depth; k<depth; k++){
+        for (int k=-depth; k<=depth; k++){
              int idx = std::clamp(i+k, 0, size-1);
              smoothed[i*size+j]+=(1<<(depth-abs(k)))*influence*content[idx*size+j];
         }

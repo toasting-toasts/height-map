@@ -55,7 +55,7 @@ private:
     }
 
 
-    void smooth_interpolatio(int depth){
+    void smooth_interpolation(int depth){
         float influence = 1.0f/(3*(1<<(depth-1))-2);
         std::vector<float> smoothed(size*size);
         
@@ -65,12 +65,13 @@ private:
              int idx = std::clamp(i+k, 0, size-1);
              smoothed[i*size+j]+=(1<<(depth-abs(k)))*influence*content[idx*size+j];
         }
-        
+
+        std::fill(smoothed.begin(), smoothed.end(), 0);
         content = smoothed;
         
         for (int i = 0; i<size; i++)
         for (int j = 0; j<size; j++)
-        for (int k=-depth; k<depth; k++){
+        for (int k=-depth; k<=depth; k++){
              int idx = std::clamp(j+k, 0, size-1);
              smoothed[i*size+j]+=(1<<(depth-abs(k)))*influence*content[i*size+idx];
         }
@@ -118,7 +119,7 @@ public:
     void random_init(){
      init_random();
     }
-    std::vector<float> get_1d_vector(){
+    std::vector<float>& get_1d_vector(){
      return content;
     }
     void interpolate_V1(float coef, int repeats){
@@ -128,13 +129,14 @@ public:
     void interpolate_v2( int depth, int repeats=1){
       for(int i = 0; i<repeats; i++){
         smooth_interpolation(depth);
+        }
     }
 };
 
 int main(){
   Heightmap map(256);
   map.random_init();
-  map.interpolate_v2();
+  map.interpolate_v2(5);
   
  return 0;
 }

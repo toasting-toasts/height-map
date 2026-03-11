@@ -53,8 +53,8 @@ private:
         init_random_recurse(vector_2d, x+half, y+half, depth-1, half, strenght*0.5f);
     }
 
-    vector<float> smooth_interpolation(int depth){
-        float influence = 1.0f/(3*(1<<depth-1)-2);
+    std::vector<float> smooth_interpolation(int depth){
+        std::float influence = 1.0f/(3*(1<<depth-1)-2);
         vector<float> smoothed(size*size);
       
         for (int i = 0; i<size; i++)

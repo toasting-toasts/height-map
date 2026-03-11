@@ -54,23 +54,28 @@ private:
         init_random_recurse(vector_2d, x+half, y+half, half, depth-1, strenght*0.5f);
     }
 
-    std::vector<float> smooth_interpolation(int depth){
-        float influence = 1.0f/(3*(1<<depth-1)-2);
+    std::vector<float> smooth_interpolation_hor(int depth){
+        float influence = 1.0f/(3*(1<<(depth-1))-2);
         std::vector<float> smoothed(size*size);
       
         for (int i = 0; i<size; i++)
         for (int j = 0; j<size; j++)
         for (int k=-depth; k<depth; k++){
              int idx = std::clamp(j+k, 0, size-1);
-             smoothed[i*size+j]+=(1<<depth-abs(k))*influence*content[i*size+idx];
+             smoothed[i*size+j]+=(1<<(depth-abs(k)))*influence*content[i*size+idx];
         }
+        return smoothed;
+    }
 
-      
+    std::vector<float> smooth_interpolation_ver(int depth){
+        float influence = 1.0f/(3*(1<<(depth-1))-2);
+        std::vector<float> smoothed(size*size);
+        
         for (int i = 0; i<size; i++)
         for (int j = 0; j<size; j++)
         for (int k=-depth; k<depth; k++){
              int idx = std::clamp(i+k, 0, size-1);
-             smoothed[i*size+j]+=(1<<depth-abs(k))*influence*content[idx*size+j];
+             smoothed[i*size+j]+=(1<<(depth-abs(k)))*influence*content[idx*size+j];
         }
         
         return smoothed;
@@ -125,7 +130,8 @@ public:
     }
     void interpolate_v2( int depth, int repeats=1){
       for(int i = 0; i<repeats; i++){
-        //todo for now
+        content = smooth_interpolation_hor(depth);
+        content = smooth_interpolation_ver(depth);
     }
 };
 

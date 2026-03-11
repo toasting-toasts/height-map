@@ -6,6 +6,7 @@
 #include <ctime>
 #include <cstdlib>
 #include <random>
+#include <algorithm>
 
 class Heightmap {
 private:
@@ -43,19 +44,19 @@ private:
             vector_2d[i*size+j] += layer;
         }
 
-        if(region_size <= 1 && depth==0) return;
+        if(region_size <= 1 || depth<=0) return;
 
         int half = region_size / 2;
 
         init_random_recurse(vector_2d, x,      y,      half, depth-1, strenght*0.5f);
         init_random_recurse(vector_2d, x+half, y,      half, depth-1, strenght*0.5f);
-        init_random_recurse(vector_2d, x,      y+half, depth-1, half, strenght*0.5f);
-        init_random_recurse(vector_2d, x+half, y+half, depth-1, half, strenght*0.5f);
+        init_random_recurse(vector_2d, x,      y+half, half, depth-1, strenght*0.5f);
+        init_random_recurse(vector_2d, x+half, y+half, half, depth-1, strenght*0.5f);
     }
 
     std::vector<float> smooth_interpolation(int depth){
-        std::float influence = 1.0f/(3*(1<<depth-1)-2);
-        vector<float> smoothed(size*size);
+        float influence = 1.0f/(3*(1<<depth-1)-2);
+        std::vector<float> smoothed(size*size);
       
         for (int i = 0; i<size; i++)
         for (int j = 0; j<size; j++)

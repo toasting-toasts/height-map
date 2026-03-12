@@ -41,7 +41,7 @@ private:
         float layer = rand()/(float)RAND_MAX * strenght;
         for(int i = y; i < y + region_size; i++)
         for(int j = x; j < x + region_size; j++){
-            vector_2d[i*size+j] += layer;
+            vector_2d[i*size+j] = std::clamp(vector_2d[i*size+j]+layer, 0, 1);
         }
 
         if(region_size <= 1 || depth<=0) return;

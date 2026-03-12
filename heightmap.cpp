@@ -55,7 +55,7 @@ private:
         std::vector<int> weights(depth*2+1);
 
         for(int i=-depth; i<=depth; i++){
-            weights[i+depth]= (1 << ( depth-std::abs(k) ));
+            weights[i+depth]= (1 << ( depth-std::abs(i) ));
         }
         
         for (int i = 0; i<size; i++)

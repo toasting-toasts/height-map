@@ -35,7 +35,7 @@ private:
         float layer = (dist(engine)*2-1) * strenght;
         for(int i = y; i < y + region_size; i++)
         for(int j = x; j < x + region_size; j++){
-            vector_2d[i*size+j] = std::clamp(vector_2d[i*size+j]+layer, 0, 1);
+            vector_2d[i*size+j] = std::clamp(vector_2d[i*size+j]+layer, 0.f, 1.f);
         }
 
         if(region_size <= 1 || depth<=0) return;
@@ -52,17 +52,17 @@ private:
     void smooth_interpolation(int depth){
         float influence = 1.0f/(3*(1<<depth)-2);
         std::vector<float> smoothed(size*size, 0);
-        std::vector<int> weights(depth*2+1);
+        std::vector<float> weights(depth*2+1, influence);
 
         for(int i=-depth; i<=depth; i++){
-            weights[i+depth]= (1 << ( depth-std::abs(i) ));
+            weights[i+depth] *= (1 << ( depth-std::abs(i) ));
         }
         
         for (int i = 0; i<size; i++)
         for (int j = 0; j<size; j++)
         for (int k=-depth; k<=depth; k++){
              int idx = std::clamp(i+k, 0, size-1);
-             smoothed[i*size+j]+=weights[k+depth]*influence*content[idx*size+j];
+             smoothed[i*size+j]+=weights[k+depth]*content[idx*size+j];
         }
 
         std::swap(smoothed, content);
@@ -72,7 +72,7 @@ private:
         for (int j = 0; j<size; j++)
         for (int k=-depth; k<=depth; k++){
              int idx = std::clamp(j+k, 0, size-1);
-             smoothed[i*size+j]+= weights[k+depth]*influence*content[i*size+idx];
+             smoothed[i*size+j]+= weights[k+depth]*content[i*size+idx];
         }
         
         std::swap(smoothed, content);
